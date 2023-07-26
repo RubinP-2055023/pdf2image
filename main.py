@@ -7,7 +7,7 @@ import base64
 app = Flask(__name__)
 
 
-def extract_images_from_pdf(pdf_file, min_width=100, min_height=100):
+def extract_images_from_pdf(pdf_file):
     extracted_images = []
 
     # Iterate over PDF pages
@@ -27,16 +27,15 @@ def extract_images_from_pdf(pdf_file, min_width=100, min_height=100):
             image_ext = base_image["ext"]
             # Load it to PIL
             image = Image.open(io.BytesIO(image_bytes))
-            # Check if the image meets the minimum dimensions
-            if image.width >= min_width and image.height >= min_height:
-                # Convert image_bytes to a base64-encoded string
-                image_base64 = base64.b64encode(image_bytes).decode("utf-8")
-                extracted_images.append({
-                    "image_base64": image_base64,
-                    "image_ext": image_ext,
-                    "page": page_index + 1,
-                    "image_index": image_index
-                })
+            
+            # Convert image_bytes to a base64-encoded string
+            image_base64 = base64.b64encode(image_bytes).decode("utf-8")
+            extracted_images.append({
+                "image_base64": image_base64,
+                "image_ext": image_ext,
+                "page": page_index + 1,
+                "image_index": image_index
+            })
 
     return extracted_images
 
